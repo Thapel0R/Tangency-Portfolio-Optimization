@@ -1,0 +1,50 @@
+Requirements file:
+
+Data Description:
+
+CSI - 300 data from 2001-01-01 to 2023-12-29 was obtained from the Chinese market data with 94 tickers from the below categories: 
+
+- Financials: 9
+- Energy: 7
+- Materials: 14
+- Industrials: 16
+- Consumer Discretionary: 12
+- Consumer Staples: 8
+- Health Care: 7
+- Information Technology: 8
+- Communication Services: 3
+- Utilities: 4
+- Real Estate: 6
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+Python Library and function requirements:
+
+In order to build GNN Tangency Portfolio using Time varying Correlation Graph Extension the below libraries are required. Installation order matters for 
+PyTorch Geometric if you don't already have them installed into your environment, using the command pip install --name of library -- then run 
+Kindly follow these two steps below before running the models.
+
+STEP 1 - Install Torch
+
+STEP 2 - Install Torch Geometric
+
+Libraries: 
+- Numpy - provides high-performance multidimensional array objects and tools for advanced mathematical operations.
+- Pandas -  Data manipulation and analysis library
+- os - Miscellaneous operating system interfaces for file and directory management
+- json - Encoding and decoding data in JSON format
+warnings - Control over warning messages to suppress or highlight specific alerts
+- yfinance - Download historical market data for tickers across global exchanges, including Chinese markets.
+- matplotlib - plotting interactive visualisations and figures.
+- PyTorch - An open-source machine learning framework used for building and training deep learning models via dynamic computational graphs.
+- Torch Geometric - An extension library for PyTorch designed specifically for deep learning on graph-structured data (Graph Neural Networks).
+- GCNConv, GATConv, SAGEConv - Specialized Graph Neural Network layers (Graph Convolutional, Graph Attention, and GraphSAGE) used for message passing and node
+feature learning.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+System requirements: 
+- Python version 3.10 or higher version is recommended. 
+- The code requires a GPU because running the code on any laptop or desktop CPU, the training might take roughly 2 to 4 hours or even longer due to the 94 stocks and the 22 years worth of data. 
+- We recommend using Google Colab which provides a CUDA-capable NVIDIA GPU which reduces training time to roughly 15 to 30 minutes.
+- RAM - at least 8 GB of system RAM is required. Pre-computing all the rolling graphs and storing roughly 2000 edge index takes up a lot of memory.
+- Internet connection is required to download the price data from Yahoo finance as well as running the code on Google Colab.
+
+
