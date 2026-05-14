@@ -27,6 +27,52 @@ with a **time-varying Pearson correlation graph** that is rebuilt at every 40-da
 window. The extension requires only publicly available OHLCV data via Yahoo Finance.
 
 **Key results on the CSI-300 proxy dataset (test period Jul 2020 - Dec 2023, ~900 days):**
+|Component|Original paper|This extension|
+|-|-|-|
+|Graph source|ChinaScope supply-demand data|Rolling Pearson correlation / Graphical LASSO|
+|Adjacency matrix|Fixed `A` — same every window|Dynamic `A(t)` — rebuilt every 40-day window|
+|Edge meaning|Company `i` supplies company `j`|`\|corr(i, j)\|` exceeds threshold|
+|Edge direction|Directed (supplier → customer)|Undirected (symmetric correlation)|
+|Node features|65 factors (CSI 300) / 161 (A-share)|7 factors from OHLCV only|
+|Data required|Proprietary ChinaScope database|Publicly available prices and volumes|
+|GNN architectures|GCN, A-DGNs, SSGC, Chebynet, SAGE|GCN, GraphSAGE, GAT|
+|Loss function|Equation 16 (unchanged)|Equation 16 (identical)|
+|Hyperparameters|lr=5e-3, α₁=1e-3, α₂=1e-1|Identical — paper values preserved|
+
+### GNN Architecture Guide
+
+|Architecture|Best for|Edge weights used?|
+|-|-|-|
+|`GCN`|Closest to paper baseline; fast|No — degree normalisation only|
+|`SAGE`|Robust to noisy graphs; stable|No — mean aggregation|
+|`GAT`|**Recommended for this extension**|Yes — learned attention α\_ij per edge|
+
+GAT is recommended because its attention mechanism learns to down-weight spurious correlation edges and amplify structurally stable ones, which is the dominant challenge in rolling correlation graphs.
+
+### Graph Method Guide
+
+|Method|Speed|Sparsity|Notes|
+|-|-|-|-|
+|`pearson`|Fast (\~0.001s per window)|Controlled by `threshold`|Default; use `threshold=0.35`|
+|`glasso`|Slow (\~5s per window)|High — L1 penalty|More principled; use lower `threshold` (\~0.05)|
+
+
+
+## Node Features (7 factors)
+
+All features are computed from adjusted close prices and trading volume — no proprietary data required.
+
+|Index|Name|Formula|Economic meaning|
+|-|-|-|-|
+|F0|`ret\_1d`|`P\_t / P\_{t-1} - 1`|1-day return — short-term momentum|
+|F1|`ret\_5d`|`P\_t / P\_{t-5} - 1`|5-day cumulative return — weekly trend|
+|F2|`ret\_20d`|`P\_t / P\_{t-20} - 1`|20-day cumulative return — monthly trend|
+|F3|`vol\_20d`|`std(r\_{t-20:t})`|20-day realised volatility — risk level|
+|F4|`volume\_z`|`zscore(log(V\_t))` cross-sectional|Relative trading activity|
+|F5|`mom\_60d`|`P\_{t-5} / P\_{t-60} - 1`|60-day momentum (skip last 5 days)|
+|F6|`rsi\_14`|`(RSI(14) / 50) - 1`|14-day RSI rescaled to \[-1, 1]|
+
+The feature tensor has shape `(T, N, 7)` and serves as `H⁰` — the initial node feature matrix fed into the GNN.
 
 | Model | Sharpe (ann) | Return (ann) | Volatility |
 |-------|-------------|-------------|-----------|
