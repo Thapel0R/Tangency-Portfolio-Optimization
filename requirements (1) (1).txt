@@ -1,0 +1,90 @@
+# =============================================================================
+# requirements.txt
+# GNN Tangency Portfolio -- Time-Varying Correlation Graph Extension
+#
+# INSTALL ORDER MATTERS for PyTorch Geometric.
+# Follow the three steps below exactly, or use the Colab one-liner at the end.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# STEP 1 -- Install PyTorch FIRST (before PyG).
+# Choose the command matching your CUDA version.
+#
+# CUDA 11.8 (most common on Colab T4):
+#   pip install torch==2.2.1 --index-url https://download.pytorch.org/whl/cu118
+#
+# CUDA 12.1:
+#   pip install torch==2.2.1 --index-url https://download.pytorch.org/whl/cu121
+#
+# CPU only:
+#   pip install torch==2.2.1 --index-url https://download.pytorch.org/whl/cpu
+#
+# Google Colab: torch is pre-installed; skip this step.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# STEP 2 -- Install PyTorch Geometric (after PyTorch).
+#
+#   pip install torch-geometric
+#
+# Optional sparse ops (faster for large graphs, CUDA 11.8):
+#   pip install torch-scatter torch-sparse \
+#     -f https://data.pyg.org/whl/torch-2.2.1+cu118.html
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# STEP 3 -- Install remaining packages (this file):
+#   pip install -r requirements.txt
+# -----------------------------------------------------------------------------
+
+
+# ── Core scientific stack ────────────────────────────────────────────────────
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0          # CubicSpline for late-listing stock interpolation
+
+# ── Machine learning utilities ───────────────────────────────────────────────
+scikit-learn>=1.3.0    # GraphicalLassoCV (used if graph_method='glasso')
+
+# ── Data download ────────────────────────────────────────────────────────────
+# IMPORTANT: yfinance >= 0.2.50 removed the show_errors parameter from
+# yf.download(). This codebase does NOT use show_errors -- it is compatible
+# with all recent yfinance versions. Minimum 0.2.50 is required because
+# earlier versions have different MultiIndex column behaviour.
+yfinance>=0.2.50
+
+# ── Visualisation ────────────────────────────────────────────────────────────
+matplotlib>=3.8.0
+
+# ── Excel output ─────────────────────────────────────────────────────────────
+openpyxl>=3.1.0        # Required for model_results.xlsx generation
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+tqdm>=4.66.0           # Progress bars
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# PyTorch and PyTorch Geometric are NOT listed here because they must be
+# installed with CUDA-specific index URLs (see Steps 1 and 2 above).
+# Listing them here without the correct URL causes pip to install CPU-only
+# versions silently.
+#
+# Verified working environment:
+#   Python           3.10 / 3.11 / 3.12
+#   PyTorch          2.2.1 (cu118 or cu121)
+#   torch-geometric  2.5.x
+#   yfinance         0.2.50+
+#   CUDA             11.8 or 12.1
+#   OS               Ubuntu 22.04 (Colab) / macOS 14 (CPU only)
+#
+# Google Colab one-liner (paste into the first cell, then restart runtime):
+#   !pip install torch-geometric yfinance>=0.2.50 scipy openpyxl matplotlib -q
+#
+# Local environment (CUDA 11.8):
+#   pip install torch==2.2.1 --index-url https://download.pytorch.org/whl/cu118
+#   pip install torch-geometric
+#   pip install -r requirements.txt
+#
+# =============================================================================
