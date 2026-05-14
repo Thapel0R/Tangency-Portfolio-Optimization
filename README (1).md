@@ -1,8 +1,19 @@
-# GNN Tangency Portfolio -- Time-Varying Correlation Graph Extension
+# GNN Tangency Portfolio — Time-Varying Correlation Graph Extension
 
-> **Replication and extension of:**
-> Liu, B., Li, H., & Kang, L. (2026). *Tangency portfolios using graph neural networks.*
-> Neural Networks, 193, 108043. https://doi.org/10.1016/j.neunet.2025.108043
+> Replication and extension of:
+> Liu, B., Li, H., \& Kang, L. (2026). **Tangency portfolios using graph neural networks.** Neural Networks, 193, 108043. (https://www.sciencedirect.com/science/article/pii/S0893608025009232?via%3Dihub)
+
+## Overview
+This project extends Tangency Portfolios Using Graph Neural Networks by improving how relationships between stocks are modeled in portfolio construction. The original study replaces traditional mean–variance optimisation with a Graph Neural Network (GNN), where stocks are represented as nodes and connected through a fixed industry-based graph, allowing the model to learn portfolio weights that maximise the Sharpe ratio without explicitly estimating covariance matrices.
+
+In this extension, the key modification is that the adjacency matrix is no longer static. Instead, it is rebuilt at each rolling window using correlations between stock returns, creating a time-varying, data-driven graph. This makes the approach fully reproducible using publicly available price data and allows the model to adapt to changing market conditions.
+
+All model components from the original paper are preserved unchanged:
+
+* GNN embedding module (Equation 4)
+* Mean and precision matrix fitting layer (Equations 5–6)
+* Long-short portfolio weight prediction (Equations 3, 7)
+* Combined loss function: `exp(-SR) + α₁·modu + α₂·ranking` (Equation 16)
 
 **University of Johannesburg | PORA9X1 -- Portfolio Optimisation and Risk Allocation**
 
